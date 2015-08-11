@@ -8,7 +8,7 @@ app.get('/', function(req, res) {
   res.render('index');
 });
 
-app.get('/items', function(req, res) {
+app.get('/items/:itemId', function(req, res) {
   res.render('index');
 });
 

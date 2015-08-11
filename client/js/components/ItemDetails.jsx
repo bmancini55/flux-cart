@@ -1,7 +1,13 @@
 
 let React        = require('react');
+let ItemStore    = require('../stores/ItemStore');
+let ItemActions  = require('../actions/ItemActions');
 
 let ItemDetails = React.createClass({
+
+  contextTypes: {
+    router: React.PropTypes.func
+  },
 
   // componentDidMount: function() {
   //   ItemStore.addChangeListener(this.onChange);
@@ -29,8 +35,9 @@ let ItemDetails = React.createClass({
   // },
 
   render: function() {
+    let itemId = this.context.router.getCurrentParams().itemId;
     return (
-      <div>Hello</div>
+      <div>Id: {itemId}</div>
     );
   }
 

@@ -11,6 +11,7 @@ let ItemDetails = require('./components/ItemDetails.jsx');
 let routes = (
   <Route name="app" handler={App} path="/">
     <DefaultRoute name="items" handler={ItemList} />
+    <Route name="item-details" handler={ItemDetails} path="/items/:itemId" />
   </Route>
 );
 
