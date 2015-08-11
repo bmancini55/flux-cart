@@ -14,6 +14,13 @@ module.exports = {
       else    dispatcher.dispatch({ actionType: 'items_load_success', payload: { items: items } });
     });
 
+  },
+
+  loadItemById: function(id) {
+    client.loadItemById(id, (err, item) => {
+      if(err) dispatcher.dispatch({ actionType: 'item_byid_fail', error: err});
+      else    dispatcher.dispatch({ actionType: 'item_byid_success', payload: { item: item }});
+    });
   }
 
 };
