@@ -14,6 +14,10 @@ let ItemStore = Object.assign({}, EventEmitter.prototype, {
           let { items } = action.payload;
           this.onItemsLoaded(items);
           break;
+        case 'item_byid_success':
+          let { item } = action.payload;
+          this.onItemsLoaded([ item ]);
+          break;
       }
     });
   },
