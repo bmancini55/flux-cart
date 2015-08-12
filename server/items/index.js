@@ -2,6 +2,7 @@ let express = require('express');
 let app     = express();
 let fs      = require('fs');
 let path    = require('path');
+let _       = require('lodash');
 
 app.get('/api/items',         (req, res, next) => handleItems(req, res).catch(next));
 app.get('/api/items/:itemId', (req, res, next) => handleItem(req, res).catch(next));
@@ -29,10 +30,12 @@ async function handleItems(req, res) {
 }
 
 async function handleItem(req, res) {
-  let items = await loadItems();
-  let id    = Object.keys(items)[0];
-  let item  = items[id];
-  res.json(item);
+  let itemId = req.params.itemId;
+  let items  = await loadItems();
+  let lookup = _.indexBy(items, 'id');
+  let item   = lookup[itemId];
+  if(!item) res.status(404).end();
+  else      res.json(item);
 }
 
 
