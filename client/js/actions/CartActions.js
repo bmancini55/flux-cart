@@ -6,11 +6,12 @@ let dispatcher = require('../dispatcher');
 // cart_update_qty
 
 module.exports = {
-  addItem: function(item) {
+  addItem: function(item, qty = 1) {
     dispatcher.dispatch({
       actionType: 'cart_add_item',
       payload: {
-        item: item
+        item: item,
+        qty: qty
       }
     });
   },

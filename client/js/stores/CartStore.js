@@ -12,8 +12,8 @@ let CartStore = Object.assign({}, EventEmitter.prototype, {
     dispatcher.register((action) => {
       switch(action.actionType) {
         case 'cart_add_item':
-          let { item } = action.payload;
-          this.onAddItem(item);
+          let { item, qty } = action.payload;
+          this.onAddItem(item, qty);
           break;
         case 'cart_remove_item':
           let { id } = action.payload;
@@ -48,7 +48,7 @@ let CartStore = Object.assign({}, EventEmitter.prototype, {
       .reduce((pre, cur) => pre + cur, 0);
   },
 
-  onAddItem: function(item) {
+  onAddItem: function(item, qty = 1) {
     if(!this.items[item.id]) {
       this.items[item.id] = item;
     }
@@ -57,7 +57,7 @@ let CartStore = Object.assign({}, EventEmitter.prototype, {
       this.items[item.id].qty = 0;
     }
 
-    this.items[item.id].qty += 1;
+    this.items[item.id].qty += parseInt(qty);
     this.emit('change');
   },
 
@@ -68,8 +68,7 @@ let CartStore = Object.assign({}, EventEmitter.prototype, {
 
   onUpdateQty: function({ id, qty }) {
     let item = this.items[id];
-    item.qtyInvalid = isNaN(parseInt(qty));
-    item.qty        = qty;
+    item.qty = parseInt(qty);
     this.emit('change');
   },
 

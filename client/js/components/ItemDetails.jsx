@@ -1,8 +1,10 @@
 
 let React       = require('react');
 let Router      = require('react-router');
+let classnames  = require('classnames');
 let ItemStore   = require('../stores/ItemStore');
 let ItemActions = require('../actions/ItemActions');
+let CartActions = require('../actions/CartActions');
 
 let ItemDetails = React.createClass({
 
@@ -36,12 +38,27 @@ let ItemDetails = React.createClass({
   },
 
   getInitialState: function() {
-    return this.mergeStoreState({});
+    return this.mergeStoreState({
+      qty: 1,
+      qtyInvalid: false
+    });
   },
 
   render: function() {
     let itemDisplay;
-    let item = this.state.item;
+    let item       = this.state.item;
+    let qty        = this.state.qty;
+    let qtyInvalid = this.state.qtyInvalid;
+    let qtyClasses = classnames({
+      'form-group': true,
+      'has-error': qtyInvalid
+    });
+    let btnClasses = classnames({
+      'btn': true,
+      'btn-primary': true,
+      'disabled': qtyInvalid
+    });
+
     if(!item) {
       itemDisplay = (
         <div>Loading item</div>
@@ -66,7 +83,19 @@ let ItemDetails = React.createClass({
                 </div>
                 <div className="col-sm-12">
                   <div className="price-container">
-                    <div className="price">${item.price.toFixed(2)}</div>
+                    <p className="price">${item.price.toFixed(2)}</p>
+                  </div>
+                </div>
+                <div className="col-sm-12">
+                  <div className="actions-container">
+                    <form className="form-inline">
+                      <div className="form-group">
+                        <button className={btnClasses} onClick={this.addToCart}>Add to Cart</button>
+                      </div>
+                      <div className={qtyClasses}>
+                        <input className="form-control qty-input" value={qty} onChange={this.qtyChanged} />
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -77,6 +106,24 @@ let ItemDetails = React.createClass({
     }
 
     return itemDisplay;
+  },
+
+  qtyChanged: function(e) {
+    let qty      = e.target.value;
+    let isNumber = /^\d+$/.test(qty);
+    let isSize   = parseInt(qty) < 10;
+    let isValid  = isNumber && isSize;
+    this.setState({ qty: qty, qtyInvalid: !isValid });
+  },
+
+  addToCart: function(e) {
+    e.preventDefault();
+
+    if(!this.state.qtyInvalid) {
+      let item = this.state.item;
+      let qty  = this.state.qty;
+      CartActions.addItem(item, qty);
+    }
   }
 
 });

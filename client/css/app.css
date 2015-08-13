@@ -157,3 +157,11 @@
 .invalid {
   border: 1px solid #ee3333;
 }
+
+.item-details .actions-container {
+  text-align: right;
+}
+.item-details .qty-input {
+  width: 35px;
+  margin-left: 1rem;
+}
