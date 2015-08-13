@@ -1,5 +1,6 @@
 
-let React = require('react');
+let React       = require('react');
+let classnames  = require('classnames');
 let CartActions = require('../actions/CartActions');
 
 let CartItem = React.createClass({
@@ -8,10 +9,20 @@ let CartItem = React.createClass({
     item: React.PropTypes.object.isRequired
   },
 
+  getInitialState: function() {
+    return {
+      qtyInvalid: false,
+      qty: this.props.item.qty
+    };
+  },
+
   render: function() {
-    let item = this.props.item;
-    let qty  = this.props.item.qty;
-    let qtyClass = item.qtyInvalid ? 'invalid' : '';
+    let item       = this.props.item;
+    let qty        = this.state.qty;
+    let qtyInvalid = this.state.qtyInvalid;
+    let qtyClass   = classnames({
+      invalid: qtyInvalid
+    });
     return (
       <div className="cart-item">
         <table className="cart-item-container">
@@ -61,7 +72,18 @@ let CartItem = React.createClass({
   },
 
   onQtyChange: function(e) {
-    CartActions.updateQty(this.props.item.id, e.target.value);
+    let qty      = e.target.value;
+    let isNumber = /^\d+$/.test(qty);
+    let isSize   = parseInt(qty) < 10;
+    let isValid  = isNumber && isSize;
+
+    // update local state
+    this.setState({ qty: qty, qtyInvalid: !isValid });
+
+    // if valid push state
+    if(isValid) {
+      CartActions.updateQty(this.props.item.id, parseInt(e.target.value));
+    }
   }
 
 });

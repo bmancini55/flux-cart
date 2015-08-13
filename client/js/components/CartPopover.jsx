@@ -67,7 +67,7 @@ let CartPopover = React.createClass({
               <div className="cart-popover-footer">
                 {() => {
                   if(cart.qty > 0) {
-                    return <p>Subtotal: ${cart.subtotal}</p>;
+                    return <p>Subtotal: ${cart.subtotal.toFixed(2)}</p>;
                   }
                   else return '';
                 }()}
